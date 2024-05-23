@@ -12,14 +12,14 @@ public class Libro {
     private Long Id;
     private String titulo;
     private List<String> idiomas;
-    private Integer numeroDeDescargas;
+    private Double numeroDeDescargas;
     @ManyToOne
     private Autor autor;
 
     public Libro() {
     }
 
-    public Libro(String titulo, Autor autor, List<String> idiomas, Integer numeroDeDescargas) {
+    public Libro(String titulo, Autor autor, List<String> idiomas, Double numeroDeDescargas) {
         this.titulo = titulo;
         this.autor = autor;
         this.idiomas = idiomas;
@@ -50,11 +50,11 @@ public class Libro {
         this.idiomas = idiomas;
     }
 
-    public Integer getNumeroDeDescargas() {
+    public Double getNumeroDeDescargas() {
         return numeroDeDescargas;
     }
 
-    public void setNumeroDeDescargas(Integer numeroDeDescargas) {
+    public void setNumeroDeDescargas(Double numeroDeDescargas) {
         this.numeroDeDescargas = numeroDeDescargas;
     }
 
