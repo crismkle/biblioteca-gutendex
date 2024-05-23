@@ -5,10 +5,15 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@Entity
 public class Autor {
+    @Id                     // Indicamos el atributo id para la tabla
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
     private String nombre;
     private LocalDate fechaDeNacimiento;
     private LocalDate fechaDeFallecimiento;
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Libro> libros;
 
     public Autor() {

@@ -1,22 +1,19 @@
 package com.challenge.bibliotecaApp.principal;
 
-//import com.challenge.bibliotecaApp.repositorio.AutorRepository;
-//import com.challenge.bibliotecaApp.repositorio.LibroRepository;
+import com.challenge.bibliotecaApp.repositorio.AutorRepository;
+import com.challenge.bibliotecaApp.repositorio.LibroRepository;
 
 import com.challenge.bibliotecaApp.service.ConsumoAPI;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 
 public class Principal {
-//    private AutorRepository autorRepository;
-//    private LibroRepository libroRepository;
+    private AutorRepository autorRepository;
+    private LibroRepository libroRepository;
 
-//    public Principal(AutorRepository autorRepository, LibroRepository libroRepository) {
-//        this.autorRepository = autorRepository;
-//        this.libroRepository = libroRepository;
-//    }
+    public Principal(AutorRepository autorRepository, LibroRepository libroRepository) {
+        this.autorRepository = autorRepository;
+        this.libroRepository = libroRepository;
+    }
 
     private final String URL_BASE = "https://gutendex.com/books/";
     private ConsumoAPI consumoAPI = new ConsumoAPI();

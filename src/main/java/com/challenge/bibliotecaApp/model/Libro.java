@@ -5,18 +5,21 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+@Entity
 public class Libro {
-    private Long libro_id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
     private String titulo;
-    private List<Autor> autor;
     private List<String> idiomas;
     private Integer numeroDeDescargas;
-    private List<Autor> autores;
+    @ManyToOne
+    private Autor autor;
 
     public Libro() {
     }
 
-    public Libro(String titulo, List<Autor> autor, List<String> idiomas, Integer numeroDeDescargas) {
+    public Libro(String titulo, Autor autor, List<String> idiomas, Integer numeroDeDescargas) {
         this.titulo = titulo;
         this.autor = autor;
         this.idiomas = idiomas;
@@ -31,11 +34,11 @@ public class Libro {
         this.titulo = titulo;
     }
 
-    public List<Autor> getAutor() {
+    public Autor getAutor() {
         return autor;
     }
 
-    public void setAutor(List<Autor> autor) {
+    public void setAutor(Autor autor) {
         this.autor = autor;
     }
 
