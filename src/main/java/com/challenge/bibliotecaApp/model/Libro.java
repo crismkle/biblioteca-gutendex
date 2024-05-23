@@ -1,6 +1,7 @@
 package com.challenge.bibliotecaApp.model;
 
 
+import com.challenge.bibliotecaApp.dto.LibroDTO;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -19,11 +20,10 @@ public class Libro {
     public Libro() {
     }
 
-    public Libro(String titulo, Autor autor, List<String> idiomas, Double numeroDeDescargas) {
-        this.titulo = titulo;
-        this.autor = autor;
-        this.idiomas = idiomas;
-        this.numeroDeDescargas = numeroDeDescargas;
+    public Libro(LibroDTO libroDTO) {
+        this.titulo = libroDTO.titulo();
+        this.idiomas = libroDTO.idiomas();
+        this.numeroDeDescargas = libroDTO.numeroDeDescargas();
     }
 
     public String getTitulo() {

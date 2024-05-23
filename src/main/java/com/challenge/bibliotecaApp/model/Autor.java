@@ -1,5 +1,6 @@
 package com.challenge.bibliotecaApp.model;
 
+import com.challenge.bibliotecaApp.dto.AutorDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -19,10 +20,10 @@ public class Autor {
     public Autor() {
     }
 
-    public Autor(String nombre, LocalDate fechaDeNacimiento, LocalDate fechaDeFallecimiento) {
-        this.nombre = nombre;
-        this.fechaDeNacimiento = fechaDeNacimiento;
-        this.fechaDeFallecimiento = fechaDeFallecimiento;
+    public Autor(AutorDTO autorDTO) {
+        this.nombre = autorDTO.nombre();
+        this.fechaDeNacimiento = autorDTO.fechaDeNacimiento();
+        this.fechaDeFallecimiento = autorDTO.fechaDeNacimiento();
     }
 
     public String getNombre() {

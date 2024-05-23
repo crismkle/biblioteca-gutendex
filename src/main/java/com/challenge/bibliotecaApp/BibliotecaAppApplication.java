@@ -16,6 +16,7 @@ public class BibliotecaAppApplication implements CommandLineRunner {
 	private AutorRepository autorRepository;
 	@Autowired
 	private LibroRepository libroRepository;
+
 	public static void main(String[] args)
 	{
 		SpringApplication.run(BibliotecaAppApplication.class, args);
@@ -24,8 +25,6 @@ public class BibliotecaAppApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		Principal principal = new Principal(autorRepository, libroRepository);
-//		Principal principal = new Principal();
 		principal.muestraMenu();
-
 	}
 }
