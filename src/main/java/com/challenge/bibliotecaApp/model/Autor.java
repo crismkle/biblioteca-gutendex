@@ -62,6 +62,6 @@ public class Autor {
                 "Fecha de nacimiento: " + fechaDeNacimiento + "\n" +
                 "Fecha de fallecimiento: " + fechaDeFallecimiento + "\n" +
                 "Libros: " + libros + "\n" +
-                "---------------\n";
+                "-----------------\n";
     }
 }
