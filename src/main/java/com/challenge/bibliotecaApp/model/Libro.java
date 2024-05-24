@@ -23,7 +23,7 @@ public class Libro {
         this.titulo = datosLibro.titulo();
         this.idiomas = datosLibro.idiomas();
         this.numeroDeDescargas = datosLibro.numeroDeDescargas();
-        this.autor = datosLibro.autores().get(0);
+        this.autor = new Autor(datosLibro.autores().get(0));
     }
 
     public String getTitulo() {
@@ -62,7 +62,7 @@ public class Libro {
     public String toString() {
         return "\n----- LIBRO -----\n" +
                 "Título: " + titulo + "\n" +
-                "Autor: " + autor + "\n" +
+                "Autor: " + autor.getNombre() + "\n" +
                 "Idiomas: " + idiomas + "\n" +
                 "Número de descargas: " + numeroDeDescargas + "\n" +
                 "---------------\n";

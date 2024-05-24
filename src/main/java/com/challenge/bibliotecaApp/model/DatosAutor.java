@@ -7,6 +7,6 @@ import java.time.LocalDate;
 
 public record DatosAutor(
         @JsonAlias("name") String nombre,
-        @JsonAlias("birth_year") LocalDate fechaDeNacimiento,
-        @JsonAlias("death_year") LocalDate fechaDeFallecimiento) {
+        @JsonAlias("birth_year") Integer fechaDeNacimiento,
+        @JsonAlias("death_year") Integer fechaDeFallecimiento) {
 }

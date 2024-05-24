@@ -1,18 +1,16 @@
 package com.challenge.bibliotecaApp.model;
 
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 public class Autor {
-    @Id                     // Indicamos el atributo id para la tabla
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
     private String nombre;
-    private LocalDate fechaDeNacimiento;
-    private LocalDate fechaDeFallecimiento;
+    private Integer fechaDeNacimiento;
+    private Integer fechaDeFallecimiento;
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Libro> libros;
 
@@ -22,7 +20,7 @@ public class Autor {
     public Autor(DatosAutor datosAutor) {
         this.nombre = datosAutor.nombre();
         this.fechaDeNacimiento = datosAutor.fechaDeNacimiento();
-        this.fechaDeFallecimiento = datosAutor.fechaDeNacimiento();
+        this.fechaDeFallecimiento = datosAutor.fechaDeFallecimiento();
     }
 
     public String getNombre() {
@@ -33,19 +31,19 @@ public class Autor {
         this.nombre = nombre;
     }
 
-    public LocalDate getFechaDeNacimiento() {
+    public Integer getFechaDeNacimiento() {
         return fechaDeNacimiento;
     }
 
-    public void setFechaDeNacimiento(LocalDate fechaDeNacimiento) {
+    public void setFechaDeNacimiento(Integer fechaDeNacimiento) {
         this.fechaDeNacimiento = fechaDeNacimiento;
     }
 
-    public LocalDate getFechaDeFallecimiento() {
+    public Integer getFechaDeFallecimiento() {
         return fechaDeFallecimiento;
     }
 
-    public void setFechaDeFallecimiento(LocalDate fechaDeFallecimiento) {
+    public void setFechaDeFallecimiento(Integer fechaDeFallecimiento) {
         this.fechaDeFallecimiento = fechaDeFallecimiento;
     }
 
