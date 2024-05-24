@@ -1,6 +1,5 @@
 package com.challenge.bibliotecaApp.model;
 
-import com.challenge.bibliotecaApp.dto.AutorDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -20,10 +19,10 @@ public class Autor {
     public Autor() {
     }
 
-    public Autor(AutorDTO autorDTO) {
-        this.nombre = autorDTO.nombre();
-        this.fechaDeNacimiento = autorDTO.fechaDeNacimiento();
-        this.fechaDeFallecimiento = autorDTO.fechaDeNacimiento();
+    public Autor(DatosAutor datosAutor) {
+        this.nombre = datosAutor.nombre();
+        this.fechaDeNacimiento = datosAutor.fechaDeNacimiento();
+        this.fechaDeFallecimiento = datosAutor.fechaDeNacimiento();
     }
 
     public String getNombre() {
@@ -64,7 +63,7 @@ public class Autor {
                 "Autor: " + nombre + "\n" +
                 "Fecha de nacimiento: " + fechaDeNacimiento + "\n" +
                 "Fecha de fallecimiento: " + fechaDeFallecimiento + "\n" +
-                "Libros: " + "\n" +
+                "Libros: " + libros + "\n" +
                 "---------------\n";
     }
 }

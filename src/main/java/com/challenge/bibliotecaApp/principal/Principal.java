@@ -1,7 +1,8 @@
 package com.challenge.bibliotecaApp.principal;
 
-import com.challenge.bibliotecaApp.dto.LibroDTO;
-import com.challenge.bibliotecaApp.dto.ResultadosDTO;
+import com.challenge.bibliotecaApp.model.DatosLibro;
+import com.challenge.bibliotecaApp.model.DatosResultados;
+import com.challenge.bibliotecaApp.model.Libro;
 import com.challenge.bibliotecaApp.repositorio.AutorRepository;
 import com.challenge.bibliotecaApp.repositorio.LibroRepository;
 
@@ -26,15 +27,16 @@ public class Principal {
 
     public void muestraMenu(){
         var json = consumoAPI.obtenerDatos(URL_BASE + "?search=Great%20Expectations");
-        var datosBusqueda = conversor.obtenerDatos(json, ResultadosDTO.class);
+        var datosBusqueda = conversor.obtenerDatos(json, DatosResultados.class);
 
-        Optional<LibroDTO> libroBuscado = datosBusqueda.resultados().stream()
+        Optional<DatosLibro> libroBuscado = datosBusqueda.resultados().stream()
                 .filter(l -> l.titulo().toUpperCase().contains("Great Expectations".toUpperCase()))
                 .findFirst();
 
         if(libroBuscado.isPresent()){
             System.out.println("Libro encontrado");
-            System.out.println(libroBuscado.get());
+            Libro libro = new Libro(libroBuscado.get());
+            System.out.println(libro);
         }else {
             System.out.println("Libro no encontrado");
         }
