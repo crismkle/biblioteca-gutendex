@@ -35,8 +35,6 @@ public class Principal {
 
 
     public void muestraMenu() {
-        var json = consumoAPI.obtenerDatos(URL_BASE + "?search=Great%20Expectations");
-        var datosBusqueda = conversor.obtenerDatos(json, DatosResultados.class);
         Scanner teclado = new Scanner(System.in);
 
         while (true) {
@@ -95,7 +93,7 @@ public class Principal {
 
     private void buscarLibroPorTitulo() {
         Scanner teclado = new Scanner(System.in);
-        System.out.println("\nIngrese el nombre del libro que desea buscar");
+        System.out.println("\nIngrese el nombre del libro que desea buscar:");
         var tituloLibro = teclado.nextLine();
         var json = consumoAPI.obtenerDatos(URL_BASE + "?search=" + tituloLibro.replace(" ", "+"));
         var datosBusqueda = conversor.obtenerDatos(json, DatosResultados.class);
@@ -142,9 +140,39 @@ public class Principal {
     }
 
     private void listarAutoresVivos() {
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("\nIngrese el año en el que los autores estaban vivos:");
+        var anio = teclado.nextLine();
+
+        try {
+            List<Autor> autoresVivos = autorRepository.autoresVivosEnAnio(Integer.valueOf(anio));
+            autoresVivos.forEach(System.out::println);
+
+        }catch (NumberFormatException e){
+            System.out.println("Ingreso no válido. Vuelva a intentarlo." + e.getMessage());
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
     }
 
     private void listarLibrosPorIdioma() {
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("\nIngrese el idioma para buscar los libros:");
+        System.out.println("""
+                es - Español
+                en - Inglés
+                fr - Francés
+                pt - Portugués\n""");
+
+        var idioma = teclado.nextLine();
+        if (idioma.equals("es") || idioma.equals("en") || idioma.equals("fr") || idioma.equals("pt")){
+            List<Libro> librosIdioma = libroRepository.librosPorIdioma(idioma);
+            librosIdioma.forEach(System.out::println);
+        }else{
+            System.out.println("Opción no válida. Vuelva a intentarlo desde el menú.");
+        }
+
     }
 
 
