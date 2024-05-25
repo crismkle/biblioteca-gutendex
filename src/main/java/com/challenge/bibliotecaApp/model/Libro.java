@@ -3,8 +3,6 @@ package com.challenge.bibliotecaApp.model;
 
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
 public class Libro {
     @Id
@@ -12,8 +10,9 @@ public class Libro {
     private Long Id;
     @Column(unique = true)
     private String titulo;
-    private String idiomas;
-    private Double numeroDeDescargas;
+    @Enumerated(EnumType.STRING)
+    private Idioma idioma;
+    private Long numeroDeDescargas;
     @ManyToOne
     private Autor autor;
 
@@ -22,7 +21,7 @@ public class Libro {
 
     public Libro(DatosLibro datosLibro) {
         this.titulo = datosLibro.titulo();
-        this.idiomas = datosLibro.idiomas().get(0);
+        this.idioma = Idioma.fromGutendex(datosLibro.idioma().get(0).trim());
         this.numeroDeDescargas = datosLibro.numeroDeDescargas();
         this.autor = new Autor(datosLibro.autores().get(0));
     }
@@ -43,19 +42,19 @@ public class Libro {
         this.autor = autor;
     }
 
-    public String getIdiomas() {
-        return idiomas;
+    public Idioma getIdioma() {
+        return idioma;
     }
 
-    public void setIdiomas(String idiomas) {
-        this.idiomas = idiomas;
+    public void setIdioma(Idioma idioma) {
+        this.idioma = idioma;
     }
 
-    public Double getNumeroDeDescargas() {
+    public Long getNumeroDeDescargas() {
         return numeroDeDescargas;
     }
 
-    public void setNumeroDeDescargas(Double numeroDeDescargas) {
+    public void setNumeroDeDescargas(Long numeroDeDescargas) {
         this.numeroDeDescargas = numeroDeDescargas;
     }
 
@@ -64,7 +63,7 @@ public class Libro {
         return "\n----- LIBRO -----\n" +
                 "Título: " + titulo + "\n" +
                 "Autor: " + autor.getNombre() + "\n" +
-                "Idiomas: " + idiomas + "\n" +
+                "Idioma: " + idioma.getIdiomaPretty() + "\n" +
                 "Número de descargas: " + numeroDeDescargas + "\n" +
                 "-----------------\n";
     }

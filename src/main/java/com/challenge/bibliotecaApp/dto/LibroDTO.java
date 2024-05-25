@@ -1,9 +1,11 @@
 package com.challenge.bibliotecaApp.dto;
 
 
+import com.challenge.bibliotecaApp.model.Idioma;
+
 public record LibroDTO(
         String titulo,
-        String idiomas,
+        Idioma idioma,
         Double numeroDeDescargas
 ) {
 }

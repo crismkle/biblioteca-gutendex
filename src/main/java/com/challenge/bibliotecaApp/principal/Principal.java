@@ -2,10 +2,7 @@ package com.challenge.bibliotecaApp.principal;
 
 import com.challenge.bibliotecaApp.BibliotecaAppApplication;
 import com.challenge.bibliotecaApp.dto.AutorDTO;
-import com.challenge.bibliotecaApp.model.Autor;
-import com.challenge.bibliotecaApp.model.DatosLibro;
-import com.challenge.bibliotecaApp.model.DatosResultados;
-import com.challenge.bibliotecaApp.model.Libro;
+import com.challenge.bibliotecaApp.model.*;
 import com.challenge.bibliotecaApp.repositorio.AutorRepository;
 import com.challenge.bibliotecaApp.repositorio.LibroRepository;
 
@@ -112,7 +109,7 @@ public class Principal {
             }else {
                 Optional<Autor> autorBD = autorRepository.findByNombreContainsIgnoreCase(libro.getAutor().getNombre());
                 if (autorBD.isPresent()) {
-                    libroRepository.insertarLibro(libro.getTitulo(), libro.getIdiomas(), libro.getNumeroDeDescargas(), autorBD.get().getId());
+                    libroRepository.insertarLibro(libro.getTitulo(), libro.getIdioma().getString(), libro.getNumeroDeDescargas(), autorBD.get().getId());
                 } else {
                     autorRepository.save(libro.getAutor());
                     libroRepository.save(libro);
@@ -160,20 +157,47 @@ public class Principal {
         Scanner teclado = new Scanner(System.in);
         System.out.println("\nIngrese el idioma para buscar los libros:");
         System.out.println("""
-                es - Español
-                en - Inglés
-                fr - Francés
-                pt - Portugués\n""");
+                1) Español
+                2) Inglés
+                3) Francés
+                4) Portugués\n""");
 
         var idioma = teclado.nextLine();
-        if (idioma.equals("es") || idioma.equals("en") || idioma.equals("fr") || idioma.equals("pt")){
-            List<Libro> librosIdioma = libroRepository.librosPorIdioma(idioma);
-            librosIdioma.forEach(System.out::println);
-        }else{
-            System.out.println("Opción no válida. Vuelva a intentarlo desde el menú.");
-        }
+        Idioma idiomaE = Idioma.fromPretty("Inglés");
+        boolean valido = true;
+        try {
+            switch (Integer.valueOf(idioma)) {
+                case 1:
+                    idiomaE = Idioma.fromPretty("Español");
+                    break;
+                case 2:
+                    idiomaE = Idioma.fromPretty("Inglés");
+                    break;
+                case 3:
+                    idiomaE = Idioma.fromPretty("Francés");
+                    break;
+                case 4:
+                    idiomaE = Idioma.fromPretty("Portugués");
+                    break;
+                default:
+                    valido = false;
+                    System.out.println("Opción no válida.");
+                    break;
+            }
 
-    }
+            if(valido){
+                List<Libro> librosIdioma = libroRepository.librosPorIdioma(idiomaE);
+                librosIdioma.forEach(System.out::println);
+            }else{
+                System.out.println("Opción no válida. Vuelva a intentarlo desde el menú.");
+            }
+
+        }catch (NumberFormatException e){
+            System.out.println("Opción no válida. Vuelva a intentarlo desde el menú" + e.getMessage());
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+           }
 
 
 
