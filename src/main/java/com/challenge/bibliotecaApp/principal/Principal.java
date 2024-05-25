@@ -1,6 +1,8 @@
 package com.challenge.bibliotecaApp.principal;
 
 import com.challenge.bibliotecaApp.BibliotecaAppApplication;
+import com.challenge.bibliotecaApp.dto.AutorDTO;
+import com.challenge.bibliotecaApp.model.Autor;
 import com.challenge.bibliotecaApp.model.DatosLibro;
 import com.challenge.bibliotecaApp.model.DatosResultados;
 import com.challenge.bibliotecaApp.model.Libro;
@@ -9,11 +11,12 @@ import com.challenge.bibliotecaApp.repositorio.LibroRepository;
 
 import com.challenge.bibliotecaApp.service.ConsumoAPI;
 import com.challenge.bibliotecaApp.service.ConvierteDatos;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 
 public class Principal {
@@ -22,6 +25,8 @@ public class Principal {
     private AutorRepository autorRepository;
     private LibroRepository libroRepository;
     private ConvierteDatos conversor = new ConvierteDatos();
+    private List<Libro> libroBuscadoBD;
+    private List<Autor> autorBuscadoBD;
 
     public Principal(AutorRepository autorRepository, LibroRepository libroRepository) {
         this.autorRepository = autorRepository;
@@ -33,18 +38,6 @@ public class Principal {
         var json = consumoAPI.obtenerDatos(URL_BASE + "?search=Great%20Expectations");
         var datosBusqueda = conversor.obtenerDatos(json, DatosResultados.class);
         Scanner teclado = new Scanner(System.in);
-
-//        Optional<DatosLibro> libroBuscado = datosBusqueda.resultados().stream()
-//                .filter(l -> l.titulo().toUpperCase().contains("Great Expectations".toUpperCase()))
-//                .findFirst();
-//
-//        if(libroBuscado.isPresent()){
-//            System.out.println("Libro encontrado");
-//            Libro libro = new Libro(libroBuscado.get());
-//            System.out.println(libro);
-//        }else {
-//            System.out.println("Libro no encontrado");
-//        }
 
         while (true) {
             System.out.println("""
@@ -112,7 +105,22 @@ public class Principal {
                 .findFirst();
         if (libroBuscado.isPresent()){
             System.out.println("¡Libro encontrado!");
-            System.out.println(new Libro(libroBuscado.get()));
+            Libro libro = new Libro(libroBuscado.get());
+            System.out.println(libro);
+            Optional<Libro> libroBD = libroRepository.findByTituloContainsIgnoreCase(libro.getTitulo());
+
+            if(libroBD.isPresent()){
+                System.out.println("El libro ya se encuentra registrado");
+            }else {
+                Optional<Autor> autorBD = autorRepository.findByNombreContainsIgnoreCase(libro.getAutor().getNombre());
+                if (autorBD.isPresent()) {
+                    libroRepository.insertarLibro(libro.getTitulo(), libro.getIdiomas(), libro.getNumeroDeDescargas(), autorBD.get().getId());
+                } else {
+                    autorRepository.save(libro.getAutor());
+                    libroRepository.save(libro);
+                }
+            }
+
         }else{
             System.out.println("Libro no encontrado");
         }
@@ -120,9 +128,17 @@ public class Principal {
     }
 
     private void listarLibrosRegistrados() {
+        libroBuscadoBD = libroRepository.findAll();
+        libroBuscadoBD.stream()
+                .sorted(Comparator.comparing(Libro::getTitulo))
+                .forEach(System.out::println);
     }
 
     private void listarAutoresRegistrados() {
+        autorBuscadoBD = autorRepository.findAll();
+        autorBuscadoBD.stream()
+                .sorted(Comparator.comparing(Autor::getNombre))
+                .forEach(System.out::println);
     }
 
     private void listarAutoresVivos() {

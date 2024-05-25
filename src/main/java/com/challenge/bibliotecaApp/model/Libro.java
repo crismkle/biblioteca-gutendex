@@ -10,6 +10,7 @@ public class Libro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
+    @Column(unique = true)
     private String titulo;
     private String idiomas;
     private Double numeroDeDescargas;

@@ -1,13 +1,16 @@
 package com.challenge.bibliotecaApp.model;
 
 import jakarta.persistence.*;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
+    @Column(unique = true)
     private String nombre;
     private Integer fechaDeNacimiento;
     private Integer fechaDeFallecimiento;
@@ -55,13 +58,25 @@ public class Autor {
         this.libros = libros;
     }
 
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
+    }
+
     @Override
     public String toString() {
+        List<String> listLibros = libros.stream()
+                .map(Libro::getTitulo)
+                .collect(Collectors.toList());
+
         return "\n----- AUTOR -----\n" +
                 "Autor: " + nombre + "\n" +
                 "Fecha de nacimiento: " + fechaDeNacimiento + "\n" +
                 "Fecha de fallecimiento: " + fechaDeFallecimiento + "\n" +
-                "Libros: " + libros + "\n" +
+                "Libros: " + listLibros + "\n" +
                 "-----------------\n";
     }
 }
