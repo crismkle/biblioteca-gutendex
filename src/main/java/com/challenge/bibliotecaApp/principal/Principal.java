@@ -7,10 +7,7 @@ import com.challenge.bibliotecaApp.repositorio.LibroRepository;
 import com.challenge.bibliotecaApp.service.ConsumoAPI;
 import com.challenge.bibliotecaApp.service.ConvierteDatos;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Principal {
@@ -91,7 +88,6 @@ public class Principal {
             }
         }
     }
-
 
     public void buscarLibroPorTitulo() {
         Scanner teclado = new Scanner(System.in);
@@ -211,6 +207,7 @@ public class Principal {
        var json = consumoAPI.obtenerDatos(URL_BASE + "?popular");
        var datosBusqueda = conversor.obtenerDatos(json, DatosResultados.class);
 
+       System.out.println("\n--- Top 10 libros más descargados ---\n");
        datosBusqueda.resultados().stream()
                .limit(10)
                .forEach(l -> System.out.println("Título: " + l.titulo() + " | Autor: " + l.autores().get(0).nombre() + " | Descargas: " + l.numeroDeDescargas()));
@@ -227,7 +224,6 @@ public class Principal {
        }else{
            System.out.println("\nEl autor " + nombreAutor + " no se encuentra registrado.");
        }
-
    }
 
 
