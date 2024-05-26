@@ -44,6 +44,5 @@ Uso de todas las funcionalidades:
 [ejemplo.webm](https://github.com/crismkle/biblioteca-gutendex/assets/122938039/ccead216-3b85-4395-a4c5-095c5a2176d3)
 
 
-
 ## ✒️ Autor
 * **Cristian Muñoz** - [crismkle](https://github.com/crismkle)
