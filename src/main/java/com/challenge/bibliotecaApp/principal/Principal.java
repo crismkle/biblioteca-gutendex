@@ -99,25 +99,26 @@ public class Principal {
                 .filter(l -> l.titulo().toUpperCase().contains(tituloLibro.toUpperCase()))
                 .findFirst();
         if (libroBuscado.isPresent()){
-            System.out.println("¡Libro encontrado!");
             Libro libro = new Libro(libroBuscado.get());
-            System.out.println(libro);
             Optional<Libro> libroBD = libroRepository.findByTituloContainsIgnoreCase(libro.getTitulo());
 
             if(libroBD.isPresent()){
-                System.out.println("El libro ya se encuentra registrado");
+                System.out.println("\nEl libro ya se encuentra registrado");
             }else {
                 Optional<Autor> autorBD = autorRepository.findByNombreContainsIgnoreCase(libro.getAutor().getNombre());
                 if (autorBD.isPresent()) {
-                    libroRepository.insertarLibro(libro.getTitulo(), libro.getIdioma().getString(), libro.getNumeroDeDescargas(), autorBD.get().getId());
+                    libro.setAutor(autorBD.get());
+                    libroRepository.save(libro);
                 } else {
                     autorRepository.save(libro.getAutor());
                     libroRepository.save(libro);
                 }
+                System.out.println("\n¡Libro encontrado!");
+                System.out.println(libro);
             }
 
         }else{
-            System.out.println("Libro no encontrado");
+            System.out.println("Libro no encontrado.");
         }
 
     }
@@ -142,11 +143,11 @@ public class Principal {
         var anio = teclado.nextLine();
 
         try {
-            List<Autor> autoresVivos = autorRepository.autoresVivosEnAnio(Integer.valueOf(anio));
+            List<Autor> autoresVivos = autorRepository.findByFechaDeNacimientoLessThanEqualAndFechaDeFallecimientoGreaterThanEqual(Integer.valueOf(anio), Integer.valueOf(anio));
             autoresVivos.forEach(System.out::println);
 
         }catch (NumberFormatException e){
-            System.out.println("Ingreso no válido. Vuelva a intentarlo." + e.getMessage());
+            System.out.println("Ingreso no válido. Vuelva a intentarlo. " + e.getMessage());
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -181,23 +182,23 @@ public class Principal {
                     break;
                 default:
                     valido = false;
-                    System.out.println("Opción no válida.");
+                    System.out.println("Opción no válida. Vuelva a intentarlo desde el menú.");
                     break;
             }
 
             if(valido){
-                List<Libro> librosIdioma = libroRepository.librosPorIdioma(idiomaE);
+                List<Libro> librosIdioma = libroRepository.findByIdioma(idiomaE);
+                System.out.println("\nNúmero de libros en idioma " + idiomaE.getIdiomaPretty().toLowerCase() + " encontrado: " + librosIdioma.size());
                 librosIdioma.forEach(System.out::println);
-            }else{
-                System.out.println("Opción no válida. Vuelva a intentarlo desde el menú.");
             }
 
         }catch (NumberFormatException e){
-            System.out.println("Opción no válida. Vuelva a intentarlo desde el menú" + e.getMessage());
+            System.out.println("Opción no válida. Vuelva a intentarlo desde el menú. " + e.getMessage());
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
            }
+
 
 
 
