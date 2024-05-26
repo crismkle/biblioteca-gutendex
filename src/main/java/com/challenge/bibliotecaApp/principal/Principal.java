@@ -8,6 +8,7 @@ import com.challenge.bibliotecaApp.service.ConsumoAPI;
 import com.challenge.bibliotecaApp.service.ConvierteDatos;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Principal {
@@ -89,6 +90,26 @@ public class Principal {
         }
     }
 
+    private void insertarLibroEnBaseDeDatos(DatosLibro libroBuscado){
+        Libro libro = new Libro(libroBuscado);
+        Optional<Libro> libroBD = libroRepository.findByTituloContainsIgnoreCase(libro.getTitulo());
+
+        if(libroBD.isPresent()){
+            System.out.println("\nEl libro ya se encuentra registrado");
+        }else {
+            Optional<Autor> autorBD = autorRepository.findByNombreContainsIgnoreCase(libro.getAutor().getNombre());
+            if (autorBD.isPresent()) {
+                libro.setAutor(autorBD.get());
+                libroRepository.save(libro);
+            } else {
+                autorRepository.save(libro.getAutor());
+                libroRepository.save(libro);
+            }
+            System.out.println("\n¡Libro encontrado!");
+            System.out.println(libro);
+        }
+    }
+
     public void buscarLibroPorTitulo() {
         Scanner teclado = new Scanner(System.in);
         System.out.println("\nIngrese el nombre del libro que desea buscar:");
@@ -99,25 +120,9 @@ public class Principal {
         Optional<DatosLibro> libroBuscado = datosBusqueda.resultados().stream()
                 .filter(l -> l.titulo().toUpperCase().contains(tituloLibro.toUpperCase()))
                 .findFirst();
+
         if (libroBuscado.isPresent()){
-            Libro libro = new Libro(libroBuscado.get());
-            Optional<Libro> libroBD = libroRepository.findByTituloContainsIgnoreCase(libro.getTitulo());
-
-            if(libroBD.isPresent()){
-                System.out.println("\nEl libro ya se encuentra registrado");
-            }else {
-                Optional<Autor> autorBD = autorRepository.findByNombreContainsIgnoreCase(libro.getAutor().getNombre());
-                if (autorBD.isPresent()) {
-                    libro.setAutor(autorBD.get());
-                    libroRepository.save(libro);
-                } else {
-                    autorRepository.save(libro.getAutor());
-                    libroRepository.save(libro);
-                }
-                System.out.println("\n¡Libro encontrado!");
-                System.out.println(libro);
-            }
-
+            insertarLibroEnBaseDeDatos(libroBuscado.get());
         }else{
             System.out.println("Libro no encontrado.");
         }
@@ -127,14 +132,14 @@ public class Principal {
     public void listarLibrosRegistrados() {
         libroBuscadoBD = libroRepository.findAll();
         libroBuscadoBD.stream()
-                .sorted(Comparator.comparing(Libro::getTitulo))
+                .sorted(Comparator.comparing(Libro::getId))
                 .forEach(System.out::println);
     }
 
     public void listarAutoresRegistrados() {
         autorBuscadoBD = autorRepository.findAll();
         autorBuscadoBD.stream()
-                .sorted(Comparator.comparing(Autor::getNombre))
+                .sorted(Comparator.comparing(Autor::getId))
                 .forEach(System.out::println);
     }
 
@@ -211,6 +216,20 @@ public class Principal {
        datosBusqueda.resultados().stream()
                .limit(10)
                .forEach(l -> System.out.println("Título: " + l.titulo() + " | Autor: " + l.autores().get(0).nombre() + " | Descargas: " + l.numeroDeDescargas()));
+
+       List<DatosLibro> libros = datosBusqueda.resultados().stream()
+               .limit(10)
+               .collect(Collectors.toList());
+
+       System.out.println("\n¿Desea guardarlos en la base de datos? s/n");
+       Scanner teclado = new Scanner(System.in);
+       var opcion = teclado.nextLine();
+       if (opcion.equalsIgnoreCase("s")){
+           for(DatosLibro dLibro: libros){
+               insertarLibroEnBaseDeDatos(dLibro);
+           }
+       }
+
    }
 
    public void buscarAutor(){

@@ -26,6 +26,14 @@ public class Libro {
         this.autor = new Autor(datosLibro.autores().get(0));
     }
 
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
+    }
+
     public String getTitulo() {
         return titulo;
     }
