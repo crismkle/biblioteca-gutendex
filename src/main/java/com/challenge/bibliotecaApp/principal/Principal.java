@@ -1,7 +1,5 @@
 package com.challenge.bibliotecaApp.principal;
 
-import com.challenge.bibliotecaApp.BibliotecaAppApplication;
-import com.challenge.bibliotecaApp.dto.AutorDTO;
 import com.challenge.bibliotecaApp.model.*;
 import com.challenge.bibliotecaApp.repositorio.AutorRepository;
 import com.challenge.bibliotecaApp.repositorio.LibroRepository;
@@ -13,7 +11,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 
 public class Principal {
@@ -45,14 +42,16 @@ public class Principal {
                     3) Listar autores registrados
                     4) Listar autores vivos en un determinado año
                     5) Listar libros por idioma
-                    6) Salir\n""");
+                    6) Top 10 libros más descargados de Gutendex
+                    7) Buscar un autor en la base de datos
+                    8) Salir\n""");
 
             System.out.println("Elija una de las opciones: ");
             var opcion = teclado.nextLine();
 
             try {
-                if (Integer.valueOf(opcion) == 6) {
-
+                if (Integer.valueOf(opcion) == 8) {
+                    System.out.println("¡Hasta luego!");
                     break;
                 }
 
@@ -72,6 +71,12 @@ public class Principal {
                     case 5:
                         listarLibrosPorIdioma();
                         break;
+                    case 6:
+                        top10LibrosMasDescargados();
+                        break;
+                    case 7:
+                        buscarAutor();
+                        break;
                     default:
                         System.out.println("Opción no válida. Vuelva a intentarlo.");
 
@@ -88,7 +93,7 @@ public class Principal {
     }
 
 
-    private void buscarLibroPorTitulo() {
+    public void buscarLibroPorTitulo() {
         Scanner teclado = new Scanner(System.in);
         System.out.println("\nIngrese el nombre del libro que desea buscar:");
         var tituloLibro = teclado.nextLine();
@@ -123,28 +128,31 @@ public class Principal {
 
     }
 
-    private void listarLibrosRegistrados() {
+    public void listarLibrosRegistrados() {
         libroBuscadoBD = libroRepository.findAll();
         libroBuscadoBD.stream()
                 .sorted(Comparator.comparing(Libro::getTitulo))
                 .forEach(System.out::println);
     }
 
-    private void listarAutoresRegistrados() {
+    public void listarAutoresRegistrados() {
         autorBuscadoBD = autorRepository.findAll();
         autorBuscadoBD.stream()
                 .sorted(Comparator.comparing(Autor::getNombre))
                 .forEach(System.out::println);
     }
 
-    private void listarAutoresVivos() {
+    public void listarAutoresVivos() {
         Scanner teclado = new Scanner(System.in);
         System.out.println("\nIngrese el año en el que los autores estaban vivos:");
         var anio = teclado.nextLine();
 
         try {
             List<Autor> autoresVivos = autorRepository.findByFechaDeNacimientoLessThanEqualAndFechaDeFallecimientoGreaterThanEqual(Integer.valueOf(anio), Integer.valueOf(anio));
-            autoresVivos.forEach(System.out::println);
+            if (autoresVivos.isEmpty()){
+                System.out.println("\nNo hay registrado autores vivos en el año " + anio);
+            }else{
+            autoresVivos.forEach(System.out::println);}
 
         }catch (NumberFormatException e){
             System.out.println("Ingreso no válido. Vuelva a intentarlo. " + e.getMessage());
@@ -154,7 +162,7 @@ public class Principal {
 
     }
 
-    private void listarLibrosPorIdioma() {
+    public void listarLibrosPorIdioma() {
         Scanner teclado = new Scanner(System.in);
         System.out.println("\nIngrese el idioma para buscar los libros:");
         System.out.println("""
@@ -197,10 +205,30 @@ public class Principal {
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
-           }
+   }
 
+   public void top10LibrosMasDescargados(){
+       var json = consumoAPI.obtenerDatos(URL_BASE + "?popular");
+       var datosBusqueda = conversor.obtenerDatos(json, DatosResultados.class);
 
+       datosBusqueda.resultados().stream()
+               .limit(10)
+               .forEach(l -> System.out.println("Título: " + l.titulo() + " | Autor: " + l.autores().get(0).nombre() + " | Descargas: " + l.numeroDeDescargas()));
+   }
 
+   public void buscarAutor(){
+       Scanner teclado = new Scanner(System.in);
+       System.out.println("\nIngrese el nombre del autor que desea buscar:");
+       var nombreAutor = teclado.nextLine();
+       Optional<Autor> autorBD = autorRepository.findByNombreContainsIgnoreCase(nombreAutor);
+
+       if (autorBD.isPresent()){
+           System.out.println(autorBD.get());
+       }else{
+           System.out.println("\nEl autor " + nombreAutor + " no se encuentra registrado.");
+       }
+
+   }
 
 
 }
