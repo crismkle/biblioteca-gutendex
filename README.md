@@ -4,6 +4,10 @@ Proyecto Challenge del curso de Java y Spring Boot de Alura/Oracle.
 El mismo consiste en una catálogo que consume la API *Gutendex* para consultar libros y los guarda en la base de datos junto con sus autores.
 Una vez guardados en la base hace consultas más personalizadas.
 
+<p align="center">
+<img src="https://github.com/crismkle/biblioteca-gutendex/assets/122938039/355f541a-e7ab-46cb-ba76-0ffea9825e82">
+</p>
+
 ## :clipboard: Enunciado
 Desarrollar un Catálogo de Libros que ofrezca interacción textual (vía consola) con los usuarios, proporcionando al menos 5 opciones de interacción. Los libros se buscarán a través de una API específica.
 La API Gutendex es un catálogo de información de más de 70.000 libros presentes en Project Gutenberg (biblioteca en línea y gratuita).
